@@ -34,26 +34,26 @@ Trạng thái: `Open` (chờ quyết định) · `Confirmed` (đã chốt) · `R
 
 | ID | Câu hỏi | Phương án đề xuất | Ảnh hưởng tới | Trạng thái | Người/ngày quyết định |
 |---|---|---|---|---|---|
-| Q-01 | Cư dân là actor riêng hay là loại hồ sơ của Khách hàng? | Loại hồ sơ của Khách hàng | Biểu đồ UC, đặc tả UC (TV2) | Open | |
-| Q-02 | Trường bắt buộc khi đăng ký và quy tắc chống trùng (SĐT, email, số giấy tờ)? | BR-04 | FR-01, FR-03 | Open | |
-| Q-03 | Lưu những dữ liệu cá nhân nào (số CCCD, ảnh giấy tờ)? | BR-05 — không lưu ảnh | NFR-02, thiết kế CSDL | Open | |
-| Q-04 | Loại giấy tờ phải kiểm tra; điều kiện từ chối bàn giao; số yêu cầu đồng thời; thời hạn hủy/hết hạn yêu cầu; có đặt trước theo khung giờ không? | BR-06, BR-07; không có đặt trước | FR-07 → FR-10 | Open | |
-| Q-05 | Có đặt cọc không? Mức cọc? Phương thức thanh toán? Điều kiện và thời điểm hoàn cọc? | BR-08 | FR-09, FR-11, FR-15, phạm vi tích hợp | Open | |
-| Q-06 | Giá thuê theo gói cố định hay theo thời gian thực tế? Mức giá? | BR-09 — gói cố định | FR-12 | Open | |
-| Q-07 | Cách làm tròn thời gian trễ, đơn giá phụ thu, có ân hạn không? | BR-10 | FR-13, test case biên | Open | |
-| Q-08 | Điều kiện xác minh cư dân, ai xác minh, mức giảm, khoản phí nào được giảm? | BR-11 | FR-14, FR-24, UC015 | Open | |
-| Q-09 | Có cho trả xe khác bãi không? Bãi nào được nhận? | BR-12 — mọi bãi đang hoạt động | FR-11, BR-14 | Open | |
-| Q-10 | Cơ chế xác định vị trí người dùng; xử lý khi không có GPS? | BR-13 | FR-05 | Open | |
-| Q-11 | Nhân viên thao tác theo bãi được phân công hay toàn hệ thống? Quản trị viên có làm được mọi việc của nhân viên không? | BR-14 | FR-17, FR-18, FR-20, NFR-01, actor | Open | |
-| Q-12 | Triển khai web responsive hay web + mobile? | Web responsive | Chương 1 mục 1.4, NFR-08 | Open | |
-| Q-13 | Xuất báo cáo (FR-22) có thuộc phạm vi cuối không? Định dạng file? In phiếu? | Có, xuất Excel/CSV — ưu tiên Thấp | FR-15, FR-22, UC019 | Open | |
+| Q-01 | Cư dân là actor riêng hay là loại hồ sơ của Khách hàng? | Loại hồ sơ của Khách hàng | Biểu đồ UC, đặc tả UC (TV2) | Open |loại hồ sơ của khách hàng: khách vãng lai hoặc khách quen |
+| Q-02 | Trường bắt buộc khi đăng ký và quy tắc chống trùng (SĐT, email, số giấy tờ)? | BR-04 | FR-01, FR-03 | Open |SĐT |
+| Q-03 | Lưu những dữ liệu cá nhân nào (số CCCD, ảnh giấy tờ)? | BR-05 — không lưu ảnh | NFR-02, thiết kế CSDL | Open | Căn cước công dân, Tên |
+| Q-04 | Loại giấy tờ phải kiểm tra; điều kiện từ chối bàn giao; số yêu cầu đồng thời; thời hạn hủy/hết hạn yêu cầu; có đặt trước theo khung giờ không? | BR-06, BR-07; không có đặt trước | FR-07 → FR-10 | Open | căn cước công dân, không có căn cước công dân hoặc không trùng với thông tin trong app, chỉ yêu cầu 1 lần và chỉ hủy hoặc hoàn thành mới được yêu cầu tiếp, được giữ xe trong 10 phút tính từ thời gian yêu cầu, được đặt trước |
+| Q-05 | Có đặt cọc không? Mức cọc? Phương thức thanh toán? Điều kiện và thời điểm hoàn cọc? | BR-08 | FR-09, FR-11, FR-15, phạm vi tích hợp | Open | Cọc bằng mức cho thuê xe, khi khách đến chỉ tính tiền thuê giờ (có 2 loại phí: xe và giờ đi). Phương thức thanh toán là chuyển khoản. Chỉ hoàn cọc khi khách hủy trong thời gian 5 phút và lần thuê trước là thành công, và hoàn trong thời gian 3 phút kể từ lúc hủy. Nếu quá thời gian giữ xe mà khách không đến thì khách mất cọc.  |
+| Q-06 | Giá thuê theo gói cố định hay theo thời gian thực tế? Mức giá? | BR-09 — gói cố định | FR-12 | Open | Theo thời gian|
+| Q-07 | Cách làm tròn thời gian trễ, đơn giá phụ thu, có ân hạn không? | BR-10 | FR-13, test case biên | Open | Không phụ thu, chỉ thu một khoản nhỏ nếu xe đạp gặp vấn đề trong lúc khách đi (tùy vào tình trạng xe hoặc lộ trình xe đã đi sau khi sửa)|
+| Q-08 | Điều kiện xác minh cư dân, ai xác minh, mức giảm, khoản phí nào được giảm? | BR-11 | FR-14, FR-24, UC015 | Open |Có thể dân cư, chứng minh thuộc dân cư|
+| Q-09 | Có cho trả xe khác bãi không? Bãi nào được nhận? | BR-12 — mọi bãi đang hoạt động | FR-11, BR-14 | Open |Có, bãi đang còn chổ chứa |
+| Q-10 | Cơ chế xác định vị trí người dùng; xử lý khi không có GPS? | BR-13 | FR-05 | Open |Đánh dấu chú ý và theo dõi |
+| Q-11 | Nhân viên thao tác theo bãi được phân công hay toàn hệ thống? Quản trị viên có làm được mọi việc của nhân viên không? | BR-14 | FR-17, FR-18, FR-20, NFR-01, actor | Open |Nhân viên được gán theo bãi tương ứng do quản trị viên |
+| Q-12 | Triển khai web responsive hay web + mobile? | Web responsive | Chương 1 mục 1.4, NFR-08 | Open | web|
+| Q-13 | Xuất báo cáo (FR-22) có thuộc phạm vi cuối không? Định dạng file? In phiếu? | Có, xuất Excel/CSV — ưu tiên Thấp | FR-15, FR-22, UC019 | Open |Không |
 | Q-14 | Nhật ký thay đổi (FR-23) có thuộc phạm vi không? | Chỉ giữ lịch sử trạng thái xe (trong FR-18); audit log tổng quát loại khỏi phạm vi | FR-23, UC020 | Open | |
-| Q-15 | Có thu phí bồi thường khi xe hư hỏng/mất không? | Chỉ ghi nhận tình trạng, không tính phí | FR-11, FR-15 | Open | |
-| Q-16 | Tiêu chí lọc xe (loại xe, xe trẻ em, xe điện…)? Hệ thống có phân loại xe không? | Lọc theo loại xe nếu có phân loại | FR-06 | Open | |
-| Q-17 | Có cho xóa bãi xe không? | BR-16 — chỉ ngừng hoạt động | FR-19 | Open | |
-| Q-18 | Kỳ thống kê, bộ lọc, chỉ số cần hiển thị? | BR-15 | FR-21 | Open | |
-| Q-19 | Mã xe duy nhất toàn hệ thống hay trong từng bãi? | Toàn hệ thống | BR-01 | Open | |
-| Q-20 | Danh sách trạng thái xe và các chuyển trạng thái hợp lệ? Có trạng thái "Đã đặt" không? | BR-02, BR-03 | FR-06 → FR-18, sơ đồ trạng thái (TV2/TV3) | Open | |
+| Q-15 | Có thu phí bồi thường khi xe hư hỏng/mất không? | Chỉ ghi nhận tình trạng, không tính phí | FR-11, FR-15 | Open |Có thu phí nhỏ phụ thuộc vào tình trang xe trước khi đi (Từ lúc xe sửa đã đi được mấy chuyến, hoặc đánh dấu sẵn xe nào hỏng giữa đường thì không mất phí). Nếu làm mất thì thu bằng 90% giá xe |
+| Q-16 | Tiêu chí lọc xe (loại xe, xe trẻ em, xe điện…)? Hệ thống có phân loại xe không? | Lọc theo loại xe nếu có phân loại | FR-06 | Open |Không |
+| Q-17 | Có cho xóa bãi xe không? | BR-16 — chỉ ngừng hoạt động | FR-19 | Open |Có |
+| Q-18 | Kỳ thống kê, bộ lọc, chỉ số cần hiển thị? | BR-15 | FR-21 | Open | Đúng|
+| Q-19 | Mã xe duy nhất toàn hệ thống hay trong từng bãi? | Toàn hệ thống | BR-01 | Open |Toàn hệ thống |
+| Q-20 | Danh sách trạng thái xe và các chuyển trạng thái hợp lệ? Có trạng thái "Đã đặt" không? | BR-02, BR-03 | FR-06 → FR-18, sơ đồ trạng thái (TV2/TV3) | Open |Có|
 
 ## 3. Quy tắc kiểm tra nhất quán
 
