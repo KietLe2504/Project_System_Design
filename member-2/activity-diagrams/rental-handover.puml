@@ -1,0 +1,78 @@
+@startuml
+title Gửi yêu cầu, hủy và bàn giao xe
+caption UC007 · UC008 · UC010 | Phương án giữ xe theo Q-04
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam ArrowColor #476373
+skinparam activity {
+  BackgroundColor #EAF6F2
+  BorderColor #2E6F61
+  DiamondBackgroundColor #FFF5DE
+  DiamondBorderColor #9B762C
+}
+
+|Khách hàng|
+start
+:Chọn bãi, xe và thời lượng;
+:Gửi yêu cầu thuê;
+|Hệ thống|
+:Kiểm tra dữ liệu, yêu cầu đang mở,\nxe Sẵn sàng và cọc nếu áp dụng;
+:Thử ghi cùng lúc yêu cầu Chờ bàn giao\nvà xe Đã đặt khi đủ điều kiện;
+if (Tiếp nhận và giữ xe thành công?) then (Có)
+  :Hiển thị mã yêu cầu và hạn giữ;
+else (Không)
+  :Báo lỗi hoặc yêu cầu kiểm tra lại\nkhi chưa rõ kết quả lưu;
+  stop
+endif
+if (Hạn giữ đã qua trước khi xử lý?) then (Có)
+  :Ghi Hết hạn nếu yêu cầu còn chờ;
+  :Giải phóng đúng phần giữ theo Q-04;
+  :Xử lý tình trạng cọc theo Q-05 nếu áp dụng;
+  stop
+endif
+|Khách hàng|
+if (Khách yêu cầu hủy?) then (Có)
+  :Gửi thao tác hủy;
+  |Hệ thống|
+  if (Đủ quyền và điều kiện lúc ghi?) then (Có)
+    :Ghi Đã hủy và giải phóng đúng phần giữ;
+    :Hiển thị tình trạng cọc nếu áp dụng;
+  else (Không)
+    :Thông báo không thể hủy;
+    :Giữ kết quả đã ghi nhận;
+  endif
+  stop
+else (Tiếp tục nhận xe)
+  |Nhân viên bãi xe|
+  :Chọn yêu cầu khách cung cấp;
+endif
+|Hệ thống|
+if (Yêu cầu còn hiệu lực và đúng quyền bãi?) then (Có)
+  :Hiển thị dữ liệu được phép xem;
+else (Không)
+  :Báo lý do được phép hiển thị;
+  stop
+endif
+|Khách hàng|
+:Xuất trình CCCD theo phương án Q-04;
+|Nhân viên bãi xe|
+:Đối chiếu giấy tờ, xe và cọc nếu áp dụng;
+if (Đủ điều kiện xác minh?) then (Có)
+  :Xác nhận giao xe;
+else (Không)
+  :Ghi lý do từ chối;
+  |Hệ thống|
+  :Thông báo kết quả;
+  :Áp dụng Q-04 nếu yêu cầu phải đóng;
+  stop
+endif
+|Hệ thống|
+:Kiểm tra lại quyền, hạn giữ và xe\nđang được giữ cho đúng yêu cầu;
+:Thử ghi đồng thời yêu cầu Đã bàn giao,\nxe Đang thuê và lượt Đang hoạt động;
+if (Ghi nhận bàn giao đầy đủ?) then (Có)
+  :Hiển thị xác nhận bàn giao;
+else (Không)
+  :Báo xung đột hoặc hướng dẫn tra cứu lại;
+endif
+stop
+@enduml

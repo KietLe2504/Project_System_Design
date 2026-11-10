@@ -1,0 +1,56 @@
+@startuml
+title UC010 · Bàn giao xe
+caption Vai trò thiết kế logic · Chờ Thành viên 3 xác nhận lifeline
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam maxMessageSize 210
+skinparam sequence {
+  ArrowColor #476373
+  LifeLineBorderColor #2E6F61
+  ParticipantBackgroundColor #EAF6F2
+  ParticipantBorderColor #2E6F61
+  GroupBackgroundColor #EFF5F8
+}
+
+actor "Nhân viên bãi xe" as NV
+boundary "Giao diện vận hành" as UI
+control "Điều phối bàn giao" as BG
+database "Dữ liệu nghiệp vụ" as DL
+
+NV -> UI : Mở danh sách và chọn yêu cầu tại bãi
+UI -> BG : Tra cứu yêu cầu trong phạm vi bãi
+BG -> DL : Đọc yêu cầu, phần giữ xe và quyền tại bãi
+DL --> BG : Dữ liệu hiện hành
+alt Thiếu quyền hoặc yêu cầu không còn hiệu lực
+  BG --> UI : Lý do được phép hiển thị
+  UI --> NV : Báo không thể bàn giao
+else Yêu cầu được phép xử lý
+  BG --> UI : Chi tiết và điều kiện được phép xem
+  UI --> NV : Hiển thị thông tin đối chiếu
+  NV -> NV : Kiểm tra CCCD, xe và cọc nếu áp dụng
+  alt Điều kiện xác minh không đạt
+    NV -> UI : Gửi lý do từ chối
+    UI -> BG : Ghi nhận kết quả xác minh
+    BG -> DL : Ghi lý do và áp dụng chính sách đóng theo Q-04
+    DL --> BG : Kết quả ghi nhận
+    BG --> UI : Bàn giao chưa thực hiện
+    UI --> NV : Hiển thị kết quả
+  else Xác minh đạt
+    opt Q-04 cho phép đổi xe
+      NV -> UI : Chọn xe thay thế
+    end
+    NV -> UI : Xác nhận giao xe
+    UI -> BG : Gửi xác nhận và dữ liệu đối chiếu
+    BG -> DL : Kiểm tra lại quyền, hạn giữ và xe khi ghi cùng lượt thuê
+    alt Bàn giao thành công
+      DL --> BG : Lượt Đang hoạt động, xe Đang thuê, yêu cầu Đã bàn giao
+      BG --> UI : Kết quả và mã lượt thuê
+      UI --> NV : Xác nhận bàn giao
+    else Xung đột hoặc chưa xác nhận được kết quả
+      DL --> BG : Lý do hoặc trạng thái chưa rõ
+      BG --> UI : Phản hồi và yêu cầu tra cứu lại nếu cần
+      UI --> NV : Hiển thị kết quả được phép xem
+    end
+  end
+end
+@enduml

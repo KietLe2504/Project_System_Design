@@ -1,0 +1,72 @@
+@startuml
+title UC011–UC012 · Ghi nhận trả xe và tính phí
+caption Vai trò thiết kế logic · Chờ Thành viên 3 xác nhận lifeline
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam maxMessageSize 210
+skinparam sequence {
+  ArrowColor #476373
+  LifeLineBorderColor #2E6F61
+  ParticipantBackgroundColor #EAF6F2
+  ParticipantBorderColor #2E6F61
+  GroupBackgroundColor #EFF5F8
+}
+
+actor "Nhân viên bãi xe" as NV
+boundary "Giao diện vận hành" as UI
+control "Điều phối trả xe" as TX
+control "Tính phí" as PHI
+database "Dữ liệu nghiệp vụ" as DL
+
+NV -> UI : Tra cứu lượt đang hoạt động theo xe
+UI -> TX : Yêu cầu dữ liệu trả xe
+TX -> DL : Đọc lượt, quyền tại bãi và điều kiện bãi trả
+DL --> TX : Dữ liệu hiện hành
+alt Lượt, quyền hoặc bãi không hợp lệ
+  TX --> UI : Lý do được phép hiển thị
+  UI --> NV : Báo chưa thể tiếp nhận
+else Đủ điều kiện tiếp nhận
+  TX --> UI : Lượt thuê được phép xử lý
+  UI --> NV : Hiển thị lượt thuê
+  loop Ghi dữ liệu trả và tính lại khi có chỉnh sửa
+    NV -> UI : Gửi bãi, mốc trả và tình trạng xe
+    UI -> TX : Đề nghị tính phí
+    TX -> DL : Đọc biểu phí và tình trạng cư dân/cọc áp dụng
+    DL --> TX : Dữ liệu phục vụ tính phí
+    TX -> PHI : Tính theo mốc giao/trả và chính sách hiện hành
+    alt Dữ liệu và quy tắc hợp lệ
+      PHI --> TX : Thời lượng, các khoản và tổng tiền
+      TX --> UI : Kết quả cần kiểm tra
+      UI --> NV : Hiển thị chi tiết các khoản
+    else Không đủ dữ liệu hoặc quy tắc
+      PHI --> TX : Lỗi tính phí
+      TX --> UI : Lý do chưa thể hoàn tất
+      UI --> NV : Báo lỗi và giữ dữ liệu nhập
+    end
+  end
+  opt Có kết quả hợp lệ và nhân viên xác nhận
+    NV -> UI : Xác nhận hoàn tất và lập phiếu
+    UI -> TX : Gửi xác nhận và dữ liệu đã kiểm tra
+    TX -> DL : Kiểm tra lại và lưu cùng lúc lượt, xe, phí và phiếu nếu đủ điều kiện
+    alt Đã hoàn tất
+      DL --> TX : Trạng thái mới và phiếu đã lưu
+      TX --> UI : Xác nhận hoàn tất cùng phiếu
+      alt Hiển thị được phiếu
+        UI --> NV : Hiển thị xác nhận và phiếu
+      else Lỗi hiển thị sau lưu
+        UI --> NV : Báo phiếu đã lưu, có thể xem lại qua UC009
+      end
+    else Dữ liệu tính phí đã đổi
+      DL --> TX : Dữ liệu tính phí hiện hành
+      TX -> PHI : Tính lại trước lần xác nhận tiếp theo
+      PHI --> TX : Kết quả mới hoặc lỗi tính phí
+      TX --> UI : Chưa hoàn tất, cần kiểm tra lại
+      UI --> NV : Trình kết quả mới nếu có, hoặc báo lỗi
+    else Điều kiện khác chưa đạt hoặc chưa rõ kết quả lưu
+      DL --> TX : Trạng thái hoặc lý do chưa ghi nhận
+      TX --> UI : Lý do hoặc yêu cầu rà lại trạng thái
+      UI --> NV : Báo kết quả và giữ dữ liệu nhập
+    end
+  end
+end
+@enduml

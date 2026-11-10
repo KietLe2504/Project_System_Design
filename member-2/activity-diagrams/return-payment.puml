@@ -1,0 +1,67 @@
+@startuml
+title Ghi nhận trả xe, tính phí và lập phiếu
+caption UC011 · UC012 | Chính sách phí, bãi trả và cọc chờ xác nhận
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam ArrowColor #476373
+skinparam activity {
+  BackgroundColor #EAF6F2
+  BorderColor #2E6F61
+  DiamondBackgroundColor #FFF5DE
+  DiamondBorderColor #9B762C
+}
+
+|Khách hàng|
+start
+:Đưa xe đến bãi và cung cấp thông tin;
+|Nhân viên bãi xe|
+:Tra cứu lượt thuê của xe;
+|Hệ thống|
+if (Lượt hoạt động, đúng quyền và bãi đủ điều kiện?) then (Có)
+  :Hiển thị lượt thuê;
+else (Không)
+  :Báo lý do và giữ kết quả đã có;
+  stop
+endif
+repeat
+  |Nhân viên bãi xe|
+  :Ghi mốc trả, bãi trả và tình trạng xe;
+  |Hệ thống|
+  :Kiểm tra dữ liệu và xác định\nthời lượng, biểu phí áp dụng;
+  if (Có dữ liệu và quy tắc hợp lệ?) then (Có)
+    :Tính phí cơ bản;
+    if (Có khoản phát sinh theo Q-07 hoặc Q-15?) then (Có)
+      :Tính khoản áp dụng;
+    endif
+    if (Hồ sơ cư dân đã xác minh?) then (Có)
+      :Xét ưu đãi theo Q-08;
+    endif
+    :Hiển thị các khoản, cọc riêng nếu có,\nvà tổng tiền;
+  else (Không)
+    :Báo lỗi và giữ dữ liệu nhập;
+    stop
+  endif
+  |Nhân viên bãi xe|
+repeat while (Cần sửa dữ liệu?) is (Có) not (Không)
+:Xác nhận hoàn tất;
+|Hệ thống|
+:Kiểm tra lại lượt, quyền, bãi,\ndữ liệu và xác nhận bắt buộc;
+if (Đủ điều kiện và kết quả phí vẫn khớp?) then (Có)
+  :Xác định trạng thái xe theo tình trạng trả;
+  :Thử ghi đồng thời lượt Đã hoàn tất, xe tại\nbãi trả, kết quả phí và một phiếu thuê/trả;
+  if (Lưu đầy đủ kết quả?) then (Có)
+    if (Hiển thị được phiếu?) then (Có)
+      :Hiển thị xác nhận và phiếu;
+    else (Không)
+      :Báo kết quả đã lưu;
+      :Khách có thể xem lại qua UC009;
+    endif
+  else (Không)
+    :Báo lỗi và kiểm tra lại kết quả\ntrước khi xác nhận lần nữa;
+  endif
+else (Không)
+  :Báo điều kiện chưa đạt hoặc trình lại phí;
+  :Chưa hoàn tất lần xác nhận này;
+endif
+stop
+@enduml

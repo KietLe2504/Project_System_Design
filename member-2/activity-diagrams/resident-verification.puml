@@ -1,0 +1,48 @@
+@startuml
+title Khai báo và xác minh hồ sơ cư dân
+caption UC004 · UC015 | Người xét và tiêu chí theo Q-08
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam ArrowColor #476373
+skinparam activity {
+  BackgroundColor #EAF6F2
+  BorderColor #2E6F61
+  DiamondBackgroundColor #FFF5DE
+  DiamondBorderColor #9B762C
+}
+
+|Khách hàng|
+start
+:Gửi thông tin và minh chứng;
+|Hệ thống|
+if (Đủ điều kiện tiếp nhận?) then (Có)
+  :Ghi Chờ xét duyệt và xác nhận đã nhận;
+else (Không)
+  :Nêu nội dung cần sửa;
+  stop
+endif
+|Người có quyền xét|
+:Chọn hồ sơ chờ;
+|Hệ thống|
+if (Đúng quyền và hồ sơ còn chờ?) then (Có)
+  :Hiển thị minh chứng trong phạm vi quyền;
+else (Không)
+  :Từ chối và giữ nguyên hồ sơ;
+  stop
+endif
+|Người có quyền xét|
+:Kiểm tra minh chứng;
+if (Đạt tiêu chí?) then (Có)
+  :Chọn xác minh;
+else (Không)
+  :Chọn từ chối và ghi lý do;
+endif
+|Hệ thống|
+if (Vẫn đủ quyền và hồ sơ còn chờ lúc ghi?) then (Có)
+  :Lưu Đã xác minh hoặc Bị từ chối;
+  :Hiển thị kết quả trong phạm vi quyền;
+else (Không)
+  :Từ chối và giữ kết quả hiện hành;
+endif
+stop
+@enduml

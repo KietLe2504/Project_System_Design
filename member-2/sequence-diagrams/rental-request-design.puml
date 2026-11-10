@@ -1,0 +1,43 @@
+@startuml
+title UC007 · Gửi yêu cầu thuê
+caption Vai trò thiết kế logic · Chờ Thành viên 3 xác nhận lifeline
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+skinparam maxMessageSize 210
+skinparam sequence {
+  ArrowColor #476373
+  LifeLineBorderColor #2E6F61
+  ParticipantBackgroundColor #EAF6F2
+  ParticipantBorderColor #2E6F61
+  GroupBackgroundColor #EFF5F8
+}
+
+actor "Khách hàng" as KH
+boundary "Giao diện thuê" as UI
+control "Điều phối yêu cầu" as YC
+database "Dữ liệu nghiệp vụ" as DL
+
+KH -> UI : Gửi bãi, xe, thời lượng và thông tin cọc nếu có
+UI -> YC : Đề nghị tiếp nhận yêu cầu
+YC -> DL : Đọc trạng thái xe, yêu cầu và lượt thuê hiện hành
+DL --> YC : Dữ liệu để kiểm tra Q-04 và Q-05
+alt Dữ liệu hoặc điều kiện không đạt
+  YC --> UI : Lý do chưa tiếp nhận
+  UI --> KH : Báo lỗi và giữ dữ liệu nhập
+else Đủ điều kiện ban đầu
+  YC -> DL : Ghi Chờ bàn giao và Đã đặt trong cùng lần lưu nếu điều kiện vẫn đúng
+  alt Ghi nhận thành công
+    DL --> YC : Mã yêu cầu, thời hạn giữ
+    YC --> UI : Yêu cầu đã tiếp nhận
+    UI --> KH : Hiển thị mã và hạn giữ
+  else Xe mất khả dụng hoặc có xung đột
+    DL --> YC : Ghi nhận bị từ chối
+    YC --> UI : Lý do xung đột
+    UI --> KH : Thông báo chọn lại hoặc kiểm tra yêu cầu
+  else Chưa rõ kết quả lưu
+    DL --> YC : Chưa xác nhận được kết quả
+    YC --> UI : Cần tra cứu trước khi gửi lại
+    UI --> KH : Hiển thị hướng dẫn và giữ dữ liệu nhập
+  end
+end
+@enduml
